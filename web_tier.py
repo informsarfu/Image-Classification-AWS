@@ -6,7 +6,7 @@ import pandas as pd
 app = Flask(__name__)
 
 classification_file = 'classification_1000.csv'
-classification_df = pd.read_csv(classification_file)
+classification_df = pd.read_csv(classification_file, index_col='Image')
 
 @app.route('/', methods=['GET'])
 def home():
@@ -24,7 +24,7 @@ def upload_file():
     
     name = os.path.splitext(files.filename)[0]
     try:
-        result = classification_df.loc[classification_df['Image'] == name, 'Results'].iloc[0]
+        result = classification_df.loc[name, 'Results']
     except IndexError:
         result = "Unknown"
     
@@ -32,4 +32,4 @@ def upload_file():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True, threaded=True)
+    app.run(host='0.0.0.0', port=5000, threaded=True)
