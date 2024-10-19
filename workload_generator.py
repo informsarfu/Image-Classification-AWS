@@ -93,3 +93,5 @@ if num_request == (responses + err_responses):
    print (f"Total number of wrong predictions: {wrong_predictions}")
    print (f"Total Test Duration: {test_duration} (seconds)")
    print ("++++++++++++++++++++++++++++++++++++")
+
+
