@@ -55,7 +55,8 @@ while True:
             upload_result_to_s3(filename, recognition_result)
 
             response_message = {
-                'filename': filename
+                'filename': filename,
+                'result': recognition_result
             }
             
             sqs.send_message(
