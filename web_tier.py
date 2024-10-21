@@ -19,12 +19,13 @@ output_bucket = '1224979548-out-bucket'
 
 #initialize ec2
 ec2 = boto3.client('ec2', region_name='us-east-1')
-app_tier_ami_id = 'ami-04968f5e3fbc324b8'
+# app_tier_ami_id = 'ami-04968f5e3fbc324b8'
+app_tier_ami_id = 'ami-017f20dca259f89e5'
 instance_type = 't2.micro'
 key_name = 'sarfraz_key'
 
 #scaling limits
-MIN_INSTANCES = 1
+MIN_INSTANCES = 0
 MAX_INSTANCES = 20
 
 
@@ -129,16 +130,8 @@ def launch_app_tier_instance():
     # Navigate to the home directory
     cd /home/ubuntu
 
-    # Update package lists and install required packages
-    sudo apt update >> /home/ubuntu/user_data.log 2>&1
-    sudo apt install -y python3-pip >> /home/ubuntu/user_data.log 2>&1
-
-    # Forcefully install boto3 globally using the bypass flag
-    sudo -H pip3 install boto3 tqdm --break-system-packages >> /home/ubuntu/user_data.log 2>&1
-    sudo -H pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu --break-system-packages >> /home/ubuntu/user_data.log 2>&1
-
     # Run app_tier.py in the background and redirect output to a log file
-    nohup python3 app_tier.py > app_tier.log 2>&1 &
+    sudo nohup python3 app_tier.py > app_tier.log 2>&1 &
     '''
     
     response = ec2.run_instances(
@@ -191,20 +184,20 @@ def scale_app_tier():
             launch_app_tier_instance()
     
     # Scale Down
-    # elif current_instance_count > desired_instance_count:
-    #     instances_to_terminate = current_instance_count - desired_instance_count
-    #     print(f"Scaling Down: Terminating {instances_to_terminate} App Tier instance(s)")
-    #     for _ in range(instances_to_terminate):
-    #         if running_instances:
-    #             instance_to_terminate = running_instances.pop(0)
-    #             terminate_app_tier_instance(instance_to_terminate)
+    elif current_instance_count > desired_instance_count:
+        instances_to_terminate = current_instance_count - desired_instance_count
+        print(f"Scaling Down: Terminating {instances_to_terminate} App Tier instance(s)")
+        for _ in range(instances_to_terminate):
+            if running_instances:
+                instance_to_terminate = running_instances.pop(0)
+                terminate_app_tier_instance(instance_to_terminate)
 
 
 # Background Thread to Regularly Check Scaling
 def start_scaling_monitor():
     while True:
         scale_app_tier()
-        time.sleep(15)
+        time.sleep(30)
 
 # Start Scaling Monitor in a Background Thread
 threading.Thread(target=start_scaling_monitor, daemon=True).start()

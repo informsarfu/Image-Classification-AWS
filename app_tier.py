@@ -69,4 +69,4 @@ while True:
             ReceiptHandle=receipt_handle
         )
         
-    time.sleep(5)
+    time.sleep(0.5)

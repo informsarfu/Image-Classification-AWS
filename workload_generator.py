@@ -93,5 +93,14 @@ if num_request == (responses + err_responses):
    print (f"Total number of wrong predictions: {wrong_predictions}")
    print (f"Total Test Duration: {test_duration} (seconds)")
    print ("++++++++++++++++++++++++++++++++++++")
+   
+   
+#    # Update package lists and install required packages
+#     sudo apt update >> /home/ubuntu/user_data.log 2>&1
+#     sudo apt install -y python3-pip >> /home/ubuntu/user_data.log 2>&1
+
+#     # Forcefully install boto3 globally using the bypass flag
+#     sudo -H pip3 install boto3 tqdm --break-system-packages >> /home/ubuntu/user_data.log 2>&1
+#     sudo -H pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu --break-system-packages >> /home/ubuntu/user_data.log 2>&1
 
 
